@@ -1,0 +1,195 @@
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import  'lib-flexible'//自适应插件
+import fairyLoading from '@/components/fairyLoading.vue'
+
+import '@/assets/icon/iconfont.css';
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
+/*分页页码*/
+import fairyPagination from '@/components/fairyPagination.vue';
+/*标题*/
+import fairyTitle from '@/components/fairyTitle.vue';
+/*模态框*/
+import fairyDia from '@/components/fairyDia.vue';
+/*自定义element标签名开始*/
+import Mock from "mockjs";
+import {Input,
+    Button,
+    Radio,
+    RadioGroup,
+    Switch,
+    Form,
+    FormItem,
+    MessageBox,
+} from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+// table 的样式需要手动引入
+import 'element-ui/lib/theme-chalk/icon.css'
+import 'element-ui/lib/theme-chalk/table.css'
+import 'element-ui/lib/theme-chalk/table-column.css'
+Vue.config.productionTip = false
+function _extend(base, clazz) {
+    return {
+        extends:base,
+        mounted:function() {
+            var el = this.$el;
+            el.className = el.className + " " + clazz;
+        }
+    };
+}
+
+function _install(Vue, name, comp) {
+    Vue.component(name, _extend(comp, name));
+}
+
+function _confirm(message, fok, fcancel) {
+    MessageBox.confirm(message, '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      //  type: 'warning'
+    }).then(() => {
+        if(fok) {
+            fok();
+        }
+    }).catch(() => {
+        if(fcancel) {
+            fcancel();
+        }
+    });
+}
+
+const install = function(Vue, opts = {}) {
+    _install(Vue, "fairy-input", Input);
+    _install(Vue, "fairy-button", Button);
+    _install(Vue, "fairy-switch", Switch);
+    _install(Vue, "fairy-radio", Radio);
+    _install(Vue, "fairy-radio-group", RadioGroup);
+    _install(Vue, "fairy-form", Form);
+    _install(Vue, "fairy-form-item", FormItem);
+    _install(Vue, "fairy-page", fairyPagination);
+    _install(Vue, "fairy-loading", fairyLoading);
+    _install(Vue, "fairy-title", fairyTitle);
+    _install(Vue, "fairy-dia", fairyDia);
+    
+    Vue.prototype.$confirm = _confirm;
+};
+Vue.use(install);
+/*自定义element标签名结束*/
+
+import adaptive from "./assets/el-table"
+Vue.use(adaptive)
+
+import  elementUi from 'element-ui'
+import '../public/stylesheets/element-variables.scss'//自定义element主题色
+Vue.use(elementUi);
+//全局过滤器文件
+import * as custom from '@/util/filter.js'
+
+Object.keys(custom).forEach(key => {
+    Vue.filter(key, custom[key])
+})
+/**
+ * 全局方法
+ */
+import fnc from './util/fnc.js'
+Vue.prototype.$fnc=fnc;
+require("@/mock/mock.js");//Mockjs
+import axios from 'axios'
+Vue.prototype.$http=axios;
+
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+
+/**
+ * axios
+ */
+import {post,fetch,patch,put} from "@/util/http.js";
+Vue.prototype.$axios=axios;
+Vue.prototype.$post=post;
+Vue.prototype.$fetch=fetch;
+Vue.prototype.$patch=patch;
+Vue.prototype.$put=put;
+Vue.prototype.$mock=Mock;
+
+
+/**
+ * 登录拦截
+ */
+router.beforeEach((to, from, next) => {
+    let reg = /^\/login\/*/;
+    if (to.path == "/login") {
+        sessionStorage.removeItem("loginMsg");
+        sessionStorage.clear();
+    }
+    let userLogin = JSON.parse(sessionStorage.getItem('loginMsg'));
+//	console.log("用户名 userLogin:",userLogin)
+    if (!userLogin && !reg.exec(to.path)) {
+        next({path: '/login'})
+    } else {
+        next()
+    }
+})
+
+/**
+ * 一键注册components下的组件
+ */
+
+import  '@/components/global.js'
+
+// 注册一个全局自定义指令 `v-focus`
+Vue.directive('focus', {
+    // 当被绑定的元素插入到 DOM 中时……
+    inserted: function (el) {
+        // 聚焦元素
+        el.focus()
+    }
+})
+/*
+ validate校验插件
+ */
+//引入中文包，提示信息可以以中文形式显示
+import zh_CN from 'vee-validate/dist/locale/zh_CN';
+import VeeValidate,{Validator} from 'vee-validate';
+import VueI18n from 'vue-i18n';
+// 使用vee-validate（会报冲突， 因为elmentui中fields属性已使用）
+
+Vue.use(VueI18n)
+const i18n = new VueI18n({
+    locale: 'zh_CN',//中文
+})
+
+Validator.extend('truthy', {
+    getMessage: field => 'The ' + field + ' value is not truthy.',
+    validate: value => !! value
+});
+
+let instance = new Validator({ trueField: 'truthy' });
+
+// Also there is an instance 'extend' method for convenience.
+instance.extend('falsy', (value) => ! value);
+
+instance.attach({
+    name: 'falseField',
+    rules: 'falsy'
+});
+
+Vue.use(VeeValidate, {
+    i18n,
+    i18nRootKey: 'validation',
+    dictionary: {
+        zh_CN
+    },
+    errorBagName: 'errorBags', // change if property conflicts.
+    fieldsBagName: 'fieldBags',
+});
+
+
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')

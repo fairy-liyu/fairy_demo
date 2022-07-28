@@ -1,0 +1,26 @@
+/*输入款开始样式*/
+.input__inner {
+  /*border-radius: 4px;*/
+  min-width: 90px;
+  max-width: 300px;
+}
+.input__inner:hover {
+  border-color: #c0c4cc;
+}
+
+
+input::-webkit-input-placeholder { /* WebKit browsers */
+  color: #BAC6CB;
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: #BAC6CB;
+}
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #BAC6CB;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: #BAC6CB;
+}
+/*输入框结束样式*/
+
+
