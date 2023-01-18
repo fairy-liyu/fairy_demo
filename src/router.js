@@ -213,6 +213,14 @@ export default new Router({
                         title: '作者信息'
                     },
                 },
+                {
+                    path: '/comCheckbox',
+                    component: resolve => require(['@/pages/homePage/page/connections/comCheckbox.vue'], resolve),//
+                    meta: {
+                        keepAlive: false, // 不需要被缓存
+                        title: '多选下拉框'
+                    },
+                },
                 //404页面需要放在最下面
                 {
                     path: '*',

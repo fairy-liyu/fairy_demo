@@ -193,6 +193,17 @@ export default {
           ],
         },
         {
+          icon: "icon-connections",
+          index: "compnent", //路径
+          title: "自制组件",
+          subs: [
+            {
+              index: "comCheckbox",
+              title: "checkbox多选下拉框",
+            },
+          ],
+        },
+        {
           icon: "icon-warning",
           index: "error",
           title: "错误处理",

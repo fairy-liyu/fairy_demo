@@ -1,21 +1,16 @@
- <template>
+<template>
   <div style="height: 100%; width: 100%; position: relative">
     <div>
       <fairy-title :text="'系统首页'" :icon="'product'"></fairy-title>
     </div>
     <div class="inner_box">
       <div class="homediv" v-for="(item, index) in homeArray" :key="index">
-        <span class="spanmoney"
-          ><span>{{ item.allName }}</span>
-          <p>&yen;{{ item.price }}</p></span
-        >
+        <span class="spanmoney"><span>{{ item.allName }}</span>
+          <p>&yen;{{ item.price }}</p>
+        </span>
         <div class="hnextdiv">
           <span>
-            <el-progress
-              type="circle"
-              :width="79"
-              :percentage="item.pie"
-            ></el-progress>
+            <el-progress type="circle" :width="79" :percentage="item.pie"></el-progress>
           </span>
         </div>
         <div class="line_box">
@@ -24,19 +19,8 @@
         <div class="daysales">日平均销售额:&yen;{{ item.avgPrice }}</div>
       </div>
       <div style="width: 97%; height: 100px" class="homedivschart">
-        <schart
-          :canvasId="canvasId"
-          :type="type"
-          style="
-            height: 420px;
-            width: 1260px;
-            margin-top: 0px;
-            margin-left: 0px;
-          "
-          :width="width"
-          :data="data"
-          :options="options"
-        >
+        <schart :canvasId="canvasId" :type="type" style="height: 420px;width: 1260px;margin-top: 0px;margin-left: 0px;"
+          :width="width" :data="data" :options="options">
         </schart>
       </div>
     </div>
@@ -86,9 +70,7 @@ export default {
       ],
     };
   },
-  components: {
-    Schart,
-  },
+  components: { Schart },
   mounted() {
     this.changeData();
   },
@@ -117,11 +99,13 @@ export default {
   height: 97%;
   width: 100%;
 }
+
 .line_box {
   width: 100%;
   text-align: center;
   vertical-align: center;
 }
+
 .line {
   height: 0px;
   width: 87%;
@@ -129,6 +113,7 @@ export default {
   padding-top: 1px;
   background-color: rgba(64, 158, 255, 0.4);
 }
+
 .homediv {
   display: inline-block;
   border: 1px solid #ffffff;
@@ -138,25 +123,30 @@ export default {
   box-shadow: 2px 2px 2px #aaaaaa;
   margin-right: 20px;
 }
-.spanmoney > span {
+
+.spanmoney>span {
   display: inline-block;
   color: rgb(194, 196, 199);
   font-size: 22px;
   margin: 7px auto auto 10px;
 }
-.spanmoney > p {
+
+.spanmoney>p {
   font-size: 32px;
   text-indent: 12px;
 }
+
 .hnextdiv {
   text-indent: 12px;
   margin-top: 10px;
 }
-.hnextdiv > span:first-child {
+
+.hnextdiv>span:first-child {
   float: right;
   margin-right: 107px;
   margin-top: -72px;
 }
+
 .daysales {
   font-size: 20px;
   color: #2b3b4b;
